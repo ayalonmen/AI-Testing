@@ -7,6 +7,12 @@ interface AgentsTableProps {
 }
 
 const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onStatusChange }) => {
+  const handleStatusChange = (agentId: string, newStatus: AgentStatus) => {
+    if (onStatusChange) {
+      onStatusChange(agentId, newStatus);
+    }
+  };
+
   return (
     <div className="agents-table-container">
       <table className="agents-table">
@@ -28,7 +34,23 @@ const AgentsTable: React.FC<AgentsTableProps> = ({ agents, onStatusChange }) => 
                     className="status-indicator"
                     style={{ backgroundColor: statusColors[agent.status] }}
                   >
-                    {agent.status}
+                    <select
+                      value={agent.status}
+                      onChange={(e) => handleStatusChange(agent.id, e.target.value as AgentStatus)}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        color: 'inherit',
+                        width: '100%',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {Object.keys(statusColors).map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="status-description">
                     {statusDescriptions[agent.status]}
